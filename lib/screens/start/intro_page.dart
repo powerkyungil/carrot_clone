@@ -1,5 +1,8 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../states/user_provider.dart';
+import '../../utills/logger.dart';
 
 class IntroPage extends StatelessWidget {
   //페이지 컨트롤러 적용
@@ -9,13 +12,7 @@ class IntroPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Padding(
-    //   padding: const EdgeInsets.symmetric(vertical: 100),
-    //   child: Scaffold(
-    //
-    //     body: Image.asset('assets/images/hobbi.jpeg'),
-    //   ),
-    // );
+    logger.d('current user state: ${context.read<UserProvider>().userState}');
     return LayoutBuilder(
       builder: (context, constraints) {
         //기기별 사이즈
@@ -64,7 +61,6 @@ class IntroPage extends StatelessWidget {
                         controller.animateToPage(1, duration: Duration(milliseconds: 700), curve: Curves.easeOut);
                       },
                       child: Text('내 동네 설정하고 시작하기', style: TextStyle(color: Colors.white, fontFamily: 'GmarketSansMedium'),),
-                      style: TextButton.styleFrom(backgroundColor: Theme.of(context).primaryColor),
                     )
                   ],
                 ),

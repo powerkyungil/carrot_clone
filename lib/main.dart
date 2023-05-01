@@ -1,16 +1,22 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:test1/router/locations.dart';
-import 'package:test1/screens/auth_screen.dart';
+import 'package:test1/screens/start_screen.dart';
 import 'package:test1/screens/splash_screen.dart';
+import 'package:test1/states/user_provider.dart';
 import 'screens/home_screen.dart';
 
+// 비머 전역 선언
 final _routerDelegate = BeamerDelegate(
+    // 비머가드
     guards: [BeamGuard(
         pathBlueprints: ['/'],
-        check: (context, location) {return false;},
-        showPage: BeamPage(child: AuthScreen())
+        check: (context, location) {
+            return context.watch<UserProvider>().userState;
+          },
+        showPage: BeamPage(child: StartScreen())
     )],
 
     locationBuilder: BeamerLocationBuilder(
@@ -55,23 +61,41 @@ class CarrotApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: ThemeData(
-          hintColor: Colors.grey[350],
-          fontFamily: 'GmarketSansLight',
-          primarySwatch: Colors.orange,
-          textTheme: TextTheme(
-            headline5: TextStyle(
-              fontFamily: 'GmarketSansLight',
+    return ChangeNotifierProvider<UserProvider>(
+      create: (BuildContext context) {
+        return UserProvider();
+      },
+      child: MaterialApp.router(
+        theme: ThemeData(
+            hintColor: Colors.grey[350],
+            fontFamily: 'GmarketSansLight',
+            primarySwatch: Colors.orange,
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.orange,
+                primary: Colors.white,
+                minimumSize: Size(48, 48),
+              )
             ),
-            button: TextStyle(
-              color: Colors.white,
-            )
-          )
+            textTheme: TextTheme(
+              headline5: TextStyle(
+                fontFamily: 'GmarketSansLight',
+              ),
+              button: TextStyle(
+                color: Colors.white,
+              )
+            ),
+            appBarTheme: AppBarTheme(
+              backgroundColor: Colors.white,
+              titleTextStyle: TextStyle(color: Colors.black87),
+              elevation: 2,
+              actionsIconTheme: IconThemeData(color: Colors.black),
+            ),
+        ),
+        debugShowCheckedModeBanner: false,
+        routeInformationParser: BeamerParser(),
+        routerDelegate: _routerDelegate,
       ),
-      debugShowCheckedModeBanner: false,
-      routeInformationParser: BeamerParser(),
-      routerDelegate: _routerDelegate,
     );
   }
 }
